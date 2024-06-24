@@ -1,0 +1,171 @@
+import React, { useState } from 'react';
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { ArrowLeft } from 'lucide-react';
+
+const PersonalDetailsForm = () => {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    surname: '',
+    dateOfBirth: '',
+    address: '',
+    country: '',
+    gender: '',
+    disclaimer: false
+  });
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prevData => ({
+      ...prevData,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSubmitted(true);
+  };
+
+  const handleClear = () => {
+    setFormData({
+      firstName: '',
+      surname: '',
+      dateOfBirth: '',
+      address: '',
+      country: '',
+      gender: '',
+      disclaimer: false
+    });
+  };
+
+  const handleBack = () => {
+    setSubmitted(false);
+  };
+
+  if (submitted) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-gray-100 p-4">
+        <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+          <h2 className="text-2xl font-bold mb-4 text-center">Success!</h2>
+          <p className="text-center mb-6">Your details have been successfully submitted.</p>
+          <Button onClick={handleBack} className="w-full">
+            <ArrowLeft className="mr-2 h-4 w-4" /> Back to Form
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+      <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-6 text-center">Personal Details</h2>
+        
+        <div className="space-y-4">
+          <div>
+            <Label htmlFor="firstName">First Name</Label>
+            <Input
+              type="text"
+              id="firstName"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          
+          <div>
+            <Label htmlFor="surname">Surname</Label>
+            <Input
+              type="text"
+              id="surname"
+              name="surname"
+              value={formData.surname}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          
+          <div>
+            <Label htmlFor="dateOfBirth">Date of Birth</Label>
+            <Input
+              type="date"
+              id="dateOfBirth"
+              name="dateOfBirth"
+              value={formData.dateOfBirth}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          
+          <div>
+            <Label htmlFor="address">Address</Label>
+            <Input
+              type="text"
+              id="address"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          
+          <div>
+            <Label htmlFor="country">Country</Label>
+            <Select name="country" onValueChange={(value) => handleChange({ target: { name: 'country', value } })}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a country" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="usa">United States</SelectItem>
+                <SelectItem value="uk">United Kingdom</SelectItem>
+                <SelectItem value="canada">Canada</SelectItem>
+                <SelectItem value="australia">Australia</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div>
+            <Label htmlFor="gender">Gender</Label>
+            <Select name="gender" onValueChange={(value) => handleChange({ target: { name: 'gender', value } })}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select gender" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="male">Male</SelectItem>
+                <SelectItem value="female">Female</SelectItem>
+                <SelectItem value="sloth">Sloth</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+                <SelectItem value="prefer-not-to-say">Prefer not to say</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="disclaimer"
+              name="disclaimer"
+              checked={formData.disclaimer}
+              onCheckedChange={(checked) => handleChange({ target: { name: 'disclaimer', type: 'checkbox', checked } })}
+            />
+            <Label htmlFor="disclaimer">
+              I agree to the terms and conditions
+            </Label>
+          </div>
+        </div>
+        
+        <div className="mt-6 space-y-4">
+          <Button type="submit" className="w-full">Submit</Button>
+          <Button type="button" onClick={handleClear} variant="outline" className="w-full">Clear</Button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+export default PersonalDetailsForm;
